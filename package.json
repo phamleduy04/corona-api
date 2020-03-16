@@ -1,17 +1,23 @@
 {
-  "name": "corona-api",
+  "name": "worldometers-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phamleduy04/corona-api/tree/worldometers"
   },
   "author": "Duy Pham",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "graphql-request": "^1.8.2",
-    "http": "0.0.0"
+    "get-json": "^1.0.1",
+    "http": "0.0.0",
+    "ms": "^2.1.2"
   }
 }

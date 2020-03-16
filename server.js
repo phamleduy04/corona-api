@@ -1,55 +1,31 @@
 var http = require('http');
 var bodyParser = require('body-parser');
 var express = require('express');
-const url = "https://corona-api.kompa.ai/graphql";
-const graphql = require("graphql-request");
+var getJSON = require('get-json');
+var fs = require('fs');
+var ms = require('ms')
 
-const query = `query countries {
-    countries {
-        Country_Region
-        Confirmed
-        Deaths
-        Recovered 
-        Last_Update
-    }
-    provinces {
-        Province_Name
-        Province_Id
-        Confirmed
-        Deaths
-        Recovered
-        Last_Update
-    }
-}`;
-
-const graphqlclient = new graphql.GraphQLClient(url, {
-    headers: {
-        Authority: "corona-api.kompa.ai",
-        Scheme: "https",
-        Path: "/graphql",
-        Accept: "*/*",
-        UserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36",
-        Origin: "https://corona.kompa.ai",
-        secfetchsize: "same-site",
-        secfetchmode: "cors",
-        Referer: "https://corona.kompa.ai",
-        AcceptEncoding: "gzip, deflate, br",
-        AcceptLanguage: "vn-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5"
-    },
-})
-
+setInterval(function() {
+    getJSON('http://corona-js.herokuapp.com/apidata').then(response => {
+        if (response.error){
+            return console.log('Error when trying to fetching file');
+        } else {
+            console.log('Đã ghi data vào file data.json')
+            fs.writeFileSync('./data.json', JSON.stringify(response))
+        }
+    })
+}, ms('1m'));
 
 var app = express();
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 var server = http.createServer(app);
-
-app.get('/api', (req, res) => {
-    graphqlclient.request(query).then(result => {
-        res.send(result)
-    })
+app.get('/apidata', (req, res) => {
+    var json_response = JSON.parse(fs.readFileSync('./data.json'));
+    res.send(json_response)
 })
+
 app.get('/', (req, res) => {
     res.send("Home page. Server running okay.");
 });
