@@ -14,6 +14,7 @@ const arcgis_url = 'https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/se
 const worldometers_url = 'https://www.worldometers.info/coronavirus/'
 const us_state_url = 'https://www.worldometers.info/coronavirus/country/us/'
 const newsbreak_url = 'https://www.newsbreak.com/topics/coronavirus'
+const jhu_csse_url = 'https://corona.lmao.ninja/jhucsse'
 //config graphqlclient
 const graphqlclient = new graphql.GraphQLClient(url, {
     headers: {
@@ -48,6 +49,15 @@ const news_query = `query topTrueNews {
         picture
         }
 }`
+
+async function jhu() {
+    getJSON(jhu_csse_url, function(error, response){
+        if (error) return;
+        fs.writeFileSync('./jhucsse.json', JSON.stringify(response))
+        console.log('Đã ghi file jhucsse.json')
+    })
+}
+
 async function worldometer(){
     let Countries = []
     const result = await axios.get(worldometers_url);
@@ -136,6 +146,7 @@ function all(){ //function chạy nhanh (set cronjob 1 phút)
     arcgis();
     corona_kompa();
     usstate();
+    jhu();
     console.log('Đã ghi tất cả file.')
 }
 
@@ -169,7 +180,7 @@ async function newsbreak() {
     console.timeEnd('newsbreak')
 }
 //Set vòng lặp ở đây
-setInterval(all, ms('2m')) //all gồm worldometer(), arcgis(), usstate() và coronakompa()
+setInterval(all, ms('3m')) //all gồm worldometer(), arcgis(), usstate() và coronakompa()
 setInterval(newsbreak, ms('30m')) //news break (getdata avg time: 154823.547ms ~ 2.5 min)
 //Set vòng lặp ở đây
 
@@ -179,6 +190,9 @@ app.use(bodyParser.urlencoded({
 }));
 var server = http.createServer(app);
 
+app.get('/jhudata', (req, res) => {
+    res.send(JSON.parse(fs.readFileSync('./jhucsse.json')))
+})
 app.get('/arcgis', (req, res) => {
     res.send(JSON.parse(fs.readFileSync('./arcgis.json')))
 })
