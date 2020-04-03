@@ -14,7 +14,7 @@ const arcgis_url = 'https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/se
 const worldometers_url = 'https://www.worldometers.info/coronavirus/'
 const us_state_url = 'https://www.worldometers.info/coronavirus/country/us/'
 const newsbreak_url = 'https://www.newsbreak.com/topics/coronavirus'
-const jhu_csse_url = 'https://corona.lmao.ninja/jhucsse'
+const jhu_csse_url = 'https://corona.lmao.ninja/v2/jhucsse'
 //config graphqlclient
 const graphqlclient = new graphql.GraphQLClient(url, {
     headers: {
